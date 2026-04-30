@@ -9,7 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ── POST PAGE LAYOUT ── */
     .post-page {
       max-width: 700px;
       margin: 0 auto;
@@ -31,18 +30,13 @@
       transition: color 0.2s;
     }
 
-    .post-back::before {
-      content: '←';
-      font-size: 14px;
-    }
-
+    .post-back::before { content: '←'; font-size: 14px; }
     .post-back:hover { color: var(--ink); }
 
-    /* ── POST TYPOGRAPHY ── */
     .post-body h1 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3rem); font-weight: 300; line-height: 1.15; margin-bottom: 0.5rem; }
     .post-body h2 { font-family: var(--serif); font-size: 1.6rem; font-weight: 300; margin: 2.5rem 0 0.75rem; }
     .post-body h3 { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; margin: 2rem 0 0.5rem; }
-    .post-body p  { font-size: 16px; line-height: 1.9; margin-bottom: 1.15rem; color: var(--ink); }
+    .post-body p  { font-size: 16px; line-height: 1.9; margin-bottom: 1.15rem; }
     .post-body ul,
     .post-body ol { margin: 0.75rem 0 1.25rem 1.5rem; font-size: 16px; line-height: 1.85; }
     .post-body li { margin-bottom: 0.35rem; }
@@ -52,29 +46,8 @@
     .post-body blockquote { border-left: 2px solid var(--accent); padding: 0.25rem 0 0.25rem 1.25rem; color: var(--ink-muted); font-style: italic; margin: 1.5rem 0; }
     .post-body hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
 
-    /* first p after h1 acts as subtitle/meta */
-    .post-body h1 + p em {
-      font-size: 13px;
-      letter-spacing: 0.04em;
-      color: var(--ink-faint);
-    }
-
-    /* ── ERROR STATE ── */
-    .post-error {
-      padding: 3rem 0;
-      color: var(--ink-muted);
-      font-style: italic;
-      font-size: 15px;
-    }
-
-    .post-error code {
-      font-style: normal;
-      font-size: 13px;
-      background: #fff;
-      border: 1px solid var(--border);
-      padding: 2px 6px;
-      border-radius: 2px;
-    }
+    .post-error { padding: 3rem 0; color: var(--ink-muted); font-size: 15px; }
+    .post-error a { color: var(--accent); text-decoration: none; }
   </style>
 </head>
 <body>
@@ -82,9 +55,9 @@
 <nav>
   <a class="nav-logo" href="index.html">Your Name</a>
   <ul class="nav-links">
-    <li><a href="index.html#home">Home</a></li>
+    <li><a href="index.html">Home</a></li>
     <li><a href="index.html#projects">Projects</a></li>
-    <li><a href="index.html" id="nav-blog" class="active">Writing</a></li>
+    <li><a href="index.html#blog" class="active">Writing</a></li>
   </ul>
 </nav>
 
@@ -104,35 +77,23 @@
   </ul>
 </footer>
 
+<script src="posts.js"></script>
 <script>
-  /* ── RESOLVE SLUG FROM URL ── */
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('slug');
   const body = document.getElementById('post-body');
 
-  if (!slug) {
-    body.innerHTML = '<p class="post-error">No post specified. <a href="index.html#blog">Back to Writing →</a></p>';
-  } else {
-    const readmePath = 'posts/' + '/README.md';
+  const post = POSTS.find(p => p.slug === slug);
 
-    fetch(readmePath)
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
-      .then(md => {
-        body.innerHTML = parseMarkdown(md);
-        // Update page title to post's h1
-        const h1 = body.querySelector('h1');
-        if (h1) document.title = h1.textContent + ' — Your Name';
-      })
-      .catch(() => {
-        body.innerHTML =
-          '<p class="post-error">' +
-          'Post not found: <code>' + readmePath + '</code>.<br/><br/>' +
-          '<a href="index.html#blog">← Back to Writing</a>' +
-          '</p>';
-      });
+  if (!post) {
+    body.innerHTML =
+      '<div class="post-error">Post not found.' +
+      '<br><br><a href="index.html#blog">← Back to Writing</a></div>';
+  } else {
+    document.title = post.title + ' — Your Name';
+    body.innerHTML = parseMarkdown(post.content.trim());
   }
 
-  /* ── MINIMAL MARKDOWN PARSER ── */
   function parseMarkdown(md) {
     let html = md
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -145,8 +106,7 @@
       .replace(/`([^`]+)`/g, '<code>$1</code>')
       .replace(/^\> (.+)$/gm, '<blockquote>$1</blockquote>');
 
-    const blocks = html.split(/\n\n+/);
-    return blocks.map(function(block) {
+    return html.split(/\n\n+/).map(function(block) {
       const t = block.trim();
       if (!t) return '';
       if (/^<(h[1-6]|hr|blockquote|ul|ol|li)/.test(t)) return t;

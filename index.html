@@ -155,48 +155,7 @@
     <p>Notes on finance, markets, and strategy. Each entry loads from a README.md file.</p>
   </div>
 
-  <div class="blog-grid">
-    <!--
-      HOW TO ADD A POST:
-      1. Create a folder e.g. posts/my-post-slug/
-      2. Add a README.md inside it
-      3. Copy a .blog-card block below, update data-readme, title, date, tag, and description
-    -->
-
-    <a class="blog-card" href="post.html?slug=2024-q4-markets">
-      <div>
-        <h4>Q4 Markets Recap</h4>
-        <p>A look back at the macro dynamics that shaped equity and credit markets in the final quarter.</p>
-      </div>
-      <div class="blog-meta">
-        <span class="blog-date">Dec 2024</span>
-        <span class="blog-tag">Markets</span>
-      </div>
-    </a>
-
-    <a class="blog-card" href="post.html?slug=dcf-myths">
-      <div>
-        <h4>Five DCF Myths</h4>
-        <p>Common misconceptions in discounted cash flow analysis that trip up even seasoned practitioners.</p>
-      </div>
-      <div class="blog-meta">
-        <span class="blog-date">Oct 2024</span>
-        <span class="blog-tag">Valuation</span>
-      </div>
-    </a>
-
-    <a class="blog-card" href="post.html?slug=consulting-year-one">
-      <div>
-        <h4>On Starting a Consulting Practice</h4>
-        <p>Honest notes from the first year of independent advisory work — what surprised me and what didn't.</p>
-      </div>
-      <div class="blog-meta">
-        <span class="blog-date">Jul 2024</span>
-        <span class="blog-tag">Career</span>
-      </div>
-    </a>
-
-  </div>
+  <div class="blog-grid" id="blog-grid"></div>
 </section>
 
 <!-- FOOTER -->
@@ -209,6 +168,24 @@
   </ul>
 </footer>
 
+<script src="posts.js"></script>
 <script src="script.js"></script>
+<script>
+  // Render blog cards from POSTS array
+  const grid = document.getElementById('blog-grid');
+  POSTS.forEach(function(post) {
+    grid.innerHTML +=
+      '<a class="blog-card" href="post.html?slug=' + post.slug + '">' +
+        '<div>' +
+          '<h4>' + post.title + '</h4>' +
+          '<p>' + post.description + '</p>' +
+        '</div>' +
+        '<div class="blog-meta">' +
+          '<span class="blog-date">' + post.date + '</span>' +
+          '<span class="blog-tag">' + post.tag + '</span>' +
+        '</div>' +
+      '</a>';
+  });
+</script>
 </body>
 </html>
