@@ -1,5 +1,17 @@
 /* ============================================================
    script.js — Your Name Finance & Consulting
+   ============================================================
+   HOW TO RUN LOCALLY:
+
+     Python 3:  python -m http.server 8000
+     Node:      npx serve .
+     VS Code:   Right-click index.html → "Open with Live Server"
+
+   Then open: http://localhost:8000
+
+   TO ADD A BLOG POST:
+   1. Create posts/your-slug/README.md
+   2. Copy a .blog-card in index.html, set href="post.html?slug=your-slug"
    ============================================================ */
 
 /* ── NAVIGATION ── */
@@ -9,67 +21,4 @@ function showSection(id) {
   document.getElementById(id).classList.add('active');
   document.getElementById('nav-' + id).classList.add('active');
   window.scrollTo(0, 0);
-}
-
-/* ── BLOG MODAL ── */
-function openPost(readmePath, title) {
-  const overlay = document.getElementById('blog-modal-overlay');
-  const content = document.getElementById('blog-modal-content');
-  overlay.classList.add('open');
-  document.body.style.overflow = 'hidden';
-  content.innerHTML = '<p class="blog-loading">Loading…</p>';
-
-  fetch(readmePath)
-    .then(r => { if (!r.ok) throw new Error(); return r.text(); })
-    .then(md => { content.innerHTML = parseMarkdown(md); })
-    .catch(() => {
-      content.innerHTML =
-        '<h1>' + title + '</h1><hr/>' +
-        '<p style="color:var(--ink-muted);font-style:italic;margin-top:1rem;">' +
-        'README not found at <code>' + readmePath + '</code>.<br/>' +
-        'Create that file relative to index.html and it will load here automatically.' +
-        '</p>';
-    });
-}
-
-function closeModal() {
-  document.getElementById('blog-modal-overlay').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-// Close modal on backdrop click
-document.getElementById('blog-modal-overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// Close modal on Escape key
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') closeModal();
-});
-
-/* ── MINIMAL MARKDOWN PARSER ── */
-function parseMarkdown(md) {
-  let html = md
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,  '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm,   '<h1>$1</h1>')
-    .replace(/^---$/gm, '<hr/>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/^\> (.+)$/gm, '<blockquote>$1</blockquote>');
-
-  const blocks = html.split(/\n\n+/);
-  return blocks.map(function(block) {
-    const t = block.trim();
-    if (!t) return '';
-    if (/^<(h[1-6]|hr|blockquote|ul|ol|li)/.test(t)) return t;
-    const lines = t.split('\n');
-    const liItems = lines
-      .filter(l => /^[-*] /.test(l))
-      .map(l => '<li>' + l.replace(/^[-*] /, '') + '</li>');
-    if (liItems.length === lines.length) return '<ul>' + liItems.join('') + '</ul>';
-    return '<p>' + t.replace(/\n/g, ' ') + '</p>';
-  }).join('\n');
 }
