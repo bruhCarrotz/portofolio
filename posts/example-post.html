@@ -1,0 +1,55 @@
+<h1>An Example Post</h1>
+<div class="post-meta">
+  <span>May 2026</span>
+  <span class="blog-tag">Learning</span><span class="blog-tag">Advisory</span>
+</div>
+
+<p>
+  This is what an HTML post looks like. Because each post is a plain HTML fragment, you have
+  complete control over the content — no markdown limitations.
+</p>
+
+<h2>What you can do</h2>
+
+<p>
+  Use any standard HTML elements: headings, paragraphs, lists, images, tables, iframes, or
+  anything else. The <code>post-body</code> stylesheet in <code>post.html</code> handles
+  the typography automatically.
+</p>
+
+<ul>
+  <li>Bold and <strong>emphasis</strong> work as expected</li>
+  <li>Links go to <a href="https://www.emvco.com" target="_blank">external sites</a> naturally</li>
+  <li>Images just need a valid <code>src</code></li>
+</ul>
+
+<h2>Callout boxes</h2>
+
+<div class="callout">
+  <strong>Tip:</strong> Use the <code>.callout</code> class on a <code>&lt;div&gt;</code>
+  for highlighted notes, warnings, or key takeaways.
+</div>
+
+<p>
+  Callouts are great for surfacing important points without breaking the reading flow.
+</p>
+
+<blockquote>
+  Use blockquotes for pull quotes, references, or anything you want to visually offset
+  from the main text.
+</blockquote>
+
+<h2>How to add your own posts</h2>
+
+<ol>
+  <li>Add an entry to <code>posts.js</code> with a unique <code>slug</code>, title, description, date, and tag.</li>
+  <li>Create <code>posts/your-slug.html</code> — copy this file as a starting point.</li>
+  <li>That's it. No build step, no markdown parser, no CMS.</li>
+</ol>
+
+<hr/>
+
+<p style="color: var(--ink-faint); font-size: 13px;">
+  Delete this post by removing its entry from <code>posts.js</code> and the
+  <code>posts/example-post.html</code> file.
+</p>
